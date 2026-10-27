@@ -1,26 +1,25 @@
-
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const BuildSetupApp());
+  runApp(const DeviceScanApp());
 }
 
-class BuildSetupApp extends StatelessWidget {
-  const BuildSetupApp({super.key});
+class DeviceScanApp extends StatelessWidget {
+  const DeviceScanApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: '3D Build Setup',
+      title: 'DeviceScan',
       theme: ThemeData(
         brightness: Brightness.dark,
-        scaffoldBackgroundColor: const Color(0xFF090D18),
+        scaffoldBackgroundColor: const Color(0xFF05070D),
+        fontFamily: 'Roboto',
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF6478FF),
+          seedColor: const Color(0xFF4C7DFF),
           brightness: Brightness.dark,
         ),
-        useMaterial3: true,
       ),
       home: const HomePage(),
     );
@@ -35,285 +34,801 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String language = 'العربية';
+  int selectedTab = 0;
+  bool scanning = false;
 
-  bool get isArabic => language == 'العربية';
+  void scanDevice() async {
+    setState(() {
+      scanning = true;
+    });
+
+    await Future.delayed(const Duration(seconds: 3));
+
+    if (!mounted) return;
+
+    setState(() {
+      scanning = false;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Device scan completed',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection:
-          isArabic ? TextDirection.rtl : TextDirection.ltr,
-      child: Scaffold(
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 48,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [
-                            Color(0xFF6478FF),
-                            Color(0xFFAA65FF),
-                          ],
-                        ),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: const Icon(
-                        Icons.desktop_windows_rounded,
-                        color: Colors.white,
-                        size: 28,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    const Expanded(
-                      child: Text(
-                        '3D Build Setup',
-                        style: TextStyle(
-                          fontSize: 21,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    PopupMenuButton<String>(
-                      initialValue: language,
-                      tooltip: 'Language',
-                      icon: const Icon(Icons.language),
-                      onSelected: (value) {
-                        setState(() {
-                          language = value;
-                        });
-                      },
-                      itemBuilder: (context) => const [
-                        PopupMenuItem(
-                          value: 'العربية',
-                          child: Text('العربية'),
-                        ),
-                        PopupMenuItem(
-                          value: 'English',
-                          child: Text('English'),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 35),
-                Text(
-                  isArabic
-                      ? 'صمّم تجميعتك'
-                      : 'Build your dream PC',
-                  style: const TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  isArabic
-                      ? 'اختار القطع، اكتشف الأداء، وصمّم سيت أبك الخاص.'
-                      : 'Choose parts, estimate performance, and design your setup.',
-                  style: const TextStyle(
-                    color: Color(0xFF9CA8C0),
-                    fontSize: 15,
-                    height: 1.6,
-                  ),
-                ),
-                const SizedBox(height: 25),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(22),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Color(0xFF202B50),
-                        Color(0xFF15172D),
-                        Color(0xFF101321),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(
-                      color: const Color(0xFF6478FF)
-                          .withValues(alpha: 0.35),
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Icon(
-                        Icons.view_in_ar_rounded,
-                        size: 55,
-                        color: Color(0xFF91A0FF),
-                      ),
-                      const SizedBox(height: 18),
-                      Text(
-                        isArabic
-                            ? 'تجميعة أحلامك تبدأ هنا'
-                            : 'Your dream setup starts here',
-                        style: const TextStyle(
-                          fontSize: 21,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 9),
-                      Text(
-                        isArabic
-                            ? 'ابنِ جهازك حسب ميزانيتك واحتياجاتك.'
-                            : 'Build a PC that matches your budget and needs.',
-                        style: const TextStyle(
-                          color: Color(0xFFB0BAD0),
-                          height: 1.5,
-                        ),
-                      ),
-                      const SizedBox(height: 22),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 52,
-                        child: FilledButton.icon(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => BuilderPage(
-                                  isArabic: isArabic,
-                                ),
-                              ),
-                            );
-                          },
-                          icon: const Icon(Icons.add_circle_outline),
-                          label: Text(
-                            isArabic
-                                ? 'ابدأ بناء التجميعة'
-                                : 'Start Building',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 28),
-                Text(
-                  isArabic ? 'مميزات التطبيق' : 'Features',
-                  style: const TextStyle(
-                    fontSize: 21,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                FeatureTile(
-                  icon: Icons.memory_rounded,
-                  title: isArabic ? 'اختيار القطع' : 'Choose Components',
-                  subtitle: isArabic
-                      ? 'معالج، كرت شاشة، رام والمزيد'
-                      : 'CPU, GPU, RAM and more',
-                ),
-                FeatureTile(
-                  icon: Icons.currency_exchange_rounded,
-                  title: isArabic ? 'الأسعار والعملات' : 'Prices & Currencies',
-                  subtitle: isArabic
-                      ? 'خطط لميزانيتك بعملتك المفضلة'
-                      : 'Plan your budget in your currency',
-                ),
-                FeatureTile(
-                  icon: Icons.speed_rounded,
-                  title: isArabic ? 'تقييم الأداء' : 'Performance',
-                  subtitle: isArabic
-                      ? 'تعرّف على قوة تجميعتك'
-                      : 'Discover your PC performance',
-                ),
-                FeatureTile(
-                  icon: Icons.view_in_ar_rounded,
-                  title: isArabic ? 'تصميم ثلاثي الأبعاد' : '3D Design',
-                  subtitle: isArabic
-                      ? 'تصوّر شكل السيت أب الخاص بك'
-                      : 'Visualize your setup',
-                ),
-                const SizedBox(height: 20),
-                Center(
-                  child: Text(
-                    '3D Build Setup • v1.0',
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.4),
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-              ],
+    return Scaffold(
+      body: SafeArea(
+        child: IndexedStack(
+          index: selectedTab,
+          children: [
+            HomeScreen(
+              scanning: scanning,
+              onScan: scanDevice,
+            ),
+            const GamesScreen(),
+            const SecurityScreen(),
+          ],
+        ),
+      ),
+
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          color: Color(0xFF090C14),
+          border: Border(
+            top: BorderSide(
+              color: Color(0xFF1A2030),
             ),
           ),
+        ),
+        child: NavigationBar(
+          backgroundColor: const Color(0xFF090C14),
+          indicatorColor: const Color(0xFF17274F),
+          selectedIndex: selectedTab,
+          onDestinationSelected: (index) {
+            setState(() {
+              selectedTab = index;
+            });
+          },
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.dashboard_outlined),
+              selectedIcon: Icon(Icons.dashboard),
+              label: 'Home',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.sports_esports_outlined),
+              selectedIcon: Icon(Icons.sports_esports),
+              label: 'Games',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.shield_outlined),
+              selectedIcon: Icon(Icons.shield),
+              label: 'Security',
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class FeatureTile extends StatelessWidget {
+// ============================================================
+// HOME
+// ============================================================
+
+class HomeScreen extends StatelessWidget {
+  final bool scanning;
+  final VoidCallback onScan;
+
+  const HomeScreen({
+    super.key,
+    required this.scanning,
+    required this.onScan,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(18, 18, 18, 25),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+
+          // HEADER
+          Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  gradient: const LinearGradient(
+                    colors: [
+                      Color(0xFF4C7DFF),
+                      Color(0xFF7B5CFF),
+                    ],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(0x554C7DFF),
+                      blurRadius: 20,
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.phone_android,
+                  color: Colors.white,
+                  size: 26,
+                ),
+              ),
+
+              const SizedBox(width: 13),
+
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'DeviceScan',
+                      style: TextStyle(
+                        fontSize: 23,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                    SizedBox(height: 2),
+                    Text(
+                      'Smart device diagnostics',
+                      style: TextStyle(
+                        color: Color(0xFF7D879D),
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Container(
+                width: 42,
+                height: 42,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF101521),
+                  borderRadius: BorderRadius.circular(13),
+                  border: Border.all(
+                    color: const Color(0xFF1D2638),
+                  ),
+                ),
+                child: const Icon(
+                  Icons.notifications_none_rounded,
+                  color: Color(0xFFB8C1D4),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 25),
+
+          // SEARCH
+          Container(
+            height: 54,
+            decoration: BoxDecoration(
+              color: const Color(0xFF0D111B),
+              borderRadius: BorderRadius.circular(17),
+              border: Border.all(
+                color: const Color(0xFF1B2435),
+              ),
+            ),
+            child: const TextField(
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+              ),
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: 'Search games, devices, modpacks...',
+                hintStyle: TextStyle(
+                  color: Color(0xFF59657A),
+                ),
+                prefixIcon: Icon(
+                  Icons.search_rounded,
+                  color: Color(0xFF71809A),
+                ),
+                suffixIcon: Icon(
+                  Icons.tune_rounded,
+                  color: Color(0xFF71809A),
+                ),
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 25),
+
+          // DEVICE CARD
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(22),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(27),
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF121C36),
+                  Color(0xFF0A101F),
+                ],
+              ),
+              border: Border.all(
+                color: const Color(0xFF26385F),
+              ),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x301B4DB8),
+                  blurRadius: 35,
+                  offset: Offset(0, 15),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+
+                Row(
+                  children: [
+                    Container(
+                      width: 82,
+                      height: 110,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF080C15),
+                        borderRadius: BorderRadius.circular(22),
+                        border: Border.all(
+                          color: const Color(0xFF263858),
+                        ),
+                      ),
+                      child: const Icon(
+                        Icons.smartphone_rounded,
+                        size: 55,
+                        color: Color(0xFF5B87FF),
+                      ),
+                    ),
+
+                    const SizedBox(width: 18),
+
+                    const Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'YOUR DEVICE',
+                            style: TextStyle(
+                              color: Color(0xFF6F80A0),
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.5,
+                            ),
+                          ),
+
+                          SizedBox(height: 7),
+
+                          Text(
+                            'Detecting device...',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+
+                          SizedBox(height: 8),
+
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.circle,
+                                size: 9,
+                                color: Color(0xFF36D98A),
+                              ),
+                              SizedBox(width: 7),
+                              Text(
+                                'Ready to scan',
+                                style: TextStyle(
+                                  color: Color(0xFF36D98A),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 22),
+
+                SizedBox(
+                  width: double.infinity,
+                  height: 57,
+                  child: ElevatedButton(
+                    onPressed: scanning ? null : onScan,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF4C7DFF),
+                      disabledBackgroundColor: const Color(0xFF26334F),
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(17),
+                      ),
+                    ),
+                    child: scanning
+                        ? const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: 21,
+                                height: 21,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.5,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              SizedBox(width: 12),
+                              Text(
+                                'Scanning device...',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ],
+                          )
+                        : const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.radar_rounded),
+                              SizedBox(width: 10),
+                              Text(
+                                'SCAN DEVICE',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 15,
+                                  letterSpacing: 1,
+                                ),
+                              ),
+                            ],
+                          ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 28),
+
+          // SECTION TITLE
+          const SectionTitle(
+            title: 'Device Overview',
+            subtitle: 'Your hardware at a glance',
+          ),
+
+          const SizedBox(height: 14),
+
+          // STATS
+          Row(
+            children: const [
+              Expanded(
+                child: StatCard(
+                  icon: Icons.memory_rounded,
+                  title: 'RAM',
+                  value: '--',
+                  unit: 'GB',
+                ),
+              ),
+              SizedBox(width: 12),
+              Expanded(
+                child: StatCard(
+                  icon: Icons.storage_rounded,
+                  title: 'Storage',
+                  value: '--',
+                  unit: 'GB',
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 12),
+
+          Row(
+            children: const [
+              Expanded(
+                child: StatCard(
+                  icon: Icons.android_rounded,
+                  title: 'Android',
+                  value: '--',
+                  unit: '',
+                ),
+              ),
+              SizedBox(width: 12),
+              Expanded(
+                child: StatCard(
+                  icon: Icons.memory_rounded,
+                  title: 'CPU',
+                  value: '--',
+                  unit: '',
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 28),
+
+          // PERFORMANCE
+          const SectionTitle(
+            title: 'Performance',
+            subtitle: 'Estimated gaming performance',
+          ),
+
+          const SizedBox(height: 14),
+
+          Container(
+            padding: const EdgeInsets.all(19),
+            decoration: BoxDecoration(
+              color: const Color(0xFF0D111B),
+              borderRadius: BorderRadius.circular(22),
+              border: Border.all(
+                color: const Color(0xFF1B2435),
+              ),
+            ),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.speed_rounded,
+                      color: Color(0xFF4C7DFF),
+                      size: 28,
+                    ),
+                    const SizedBox(width: 12),
+                    const Expanded(
+                      child: Text(
+                        'Gaming Score',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      '-- / 100',
+                      style: TextStyle(
+                        color: Colors.grey.shade500,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 18),
+
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: const LinearProgressIndicator(
+                    value: 0,
+                    minHeight: 9,
+                    backgroundColor: Color(0xFF1A2232),
+                  ),
+                ),
+
+                const SizedBox(height: 14),
+
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Performance',
+                      style: TextStyle(
+                        color: Color(0xFF66738A),
+                        fontSize: 11,
+                      ),
+                    ),
+                    Text(
+                      'Waiting for scan',
+                      style: TextStyle(
+                        color: Color(0xFF66738A),
+                        fontSize: 11,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 28),
+
+          // POPULAR GAMES
+          const SectionTitle(
+            title: 'Popular Games',
+            subtitle: 'Check estimated FPS',
+          ),
+
+          const SizedBox(height: 14),
+
+          const GameTile(
+            icon: Icons.grass_rounded,
+            name: 'Minecraft',
+            category: 'Sandbox',
+            fps: '-- FPS',
+          ),
+
+          const GameTile(
+            icon: Icons.sports_esports_rounded,
+            name: 'Roblox',
+            category: 'Adventure',
+            fps: '-- FPS',
+          ),
+
+          const GameTile(
+            icon: Icons.local_fire_department_rounded,
+            name: 'PUBG Mobile',
+            category: 'Battle Royale',
+            fps: '-- FPS',
+          ),
+
+          const GameTile(
+            icon: Icons.flash_on_rounded,
+            name: 'Call of Duty Mobile',
+            category: 'Action',
+            fps: '-- FPS',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ============================================================
+// STAT CARD
+// ============================================================
+
+class StatCard extends StatelessWidget {
   final IconData icon;
+  final String title;
+  final String value;
+  final String unit;
+
+  const StatCard({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.value,
+    required this.unit,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(17),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0D111B),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: const Color(0xFF1B2435),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(
+              color: const Color(0xFF121E3A),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              icon,
+              color: const Color(0xFF5B87FF),
+              size: 20,
+            ),
+          ),
+
+          const SizedBox(height: 15),
+
+          Text(
+            title,
+            style: const TextStyle(
+              color: Color(0xFF758198),
+              fontSize: 12,
+            ),
+          ),
+
+          const SizedBox(height: 5),
+
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              if (unit.isNotEmpty) ...[
+                const SizedBox(width: 4),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 3),
+                  child: Text(
+                    unit,
+                    style: const TextStyle(
+                      color: Color(0xFF69758B),
+                      fontSize: 11,
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ============================================================
+// SECTION TITLE
+// ============================================================
+
+class SectionTitle extends StatelessWidget {
   final String title;
   final String subtitle;
 
-  const FeatureTile({
+  const SectionTitle({
     super.key,
-    required this.icon,
     required this.title,
     required this.subtitle,
   });
 
   @override
   Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              const SizedBox(height: 3),
+              Text(
+                subtitle,
+                style: const TextStyle(
+                  color: Color(0xFF657187),
+                  fontSize: 11,
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        const Icon(
+          Icons.arrow_forward_ios_rounded,
+          size: 14,
+          color: Color(0xFF566176),
+        ),
+      ],
+    );
+  }
+}
+
+// ============================================================
+// GAME TILE
+// ============================================================
+
+class GameTile extends StatelessWidget {
+  final IconData icon;
+  final String name;
+  final String category;
+  final String fps;
+
+  const GameTile({
+    super.key,
+    required this.icon,
+    required this.name,
+    required this.category,
+    required this.fps,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 11),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFF131A2A),
+        color: const Color(0xFF0D111B),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: const Color(0xFF28334A),
+          color: const Color(0xFF1B2435),
         ),
       ),
       child: Row(
         children: [
           Container(
-            width: 46,
-            height: 46,
+            width: 52,
+            height: 52,
             decoration: BoxDecoration(
-              color: const Color(0xFF6478FF).withValues(alpha: 0.14),
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(15),
+              gradient: const LinearGradient(
+                colors: [
+                  Color(0xFF17233E),
+                  Color(0xFF101828),
+                ],
+              ),
             ),
             child: Icon(
               icon,
-              color: const Color(0xFF91A0FF),
+              color: const Color(0xFF5B87FF),
+              size: 27,
             ),
           ),
-          const SizedBox(width: 14),
+
+          const SizedBox(width: 13),
+
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  name,
                   style: const TextStyle(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w800,
                     fontSize: 15,
                   ),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 4),
                 Text(
-                  subtitle,
+                  category,
                   style: const TextStyle(
-                    color: Color(0xFF9CA8C0),
-                    fontSize: 12,
+                    color: Color(0xFF69758A),
+                    fontSize: 11,
                   ),
                 ),
               ],
             ),
+          ),
+
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                fps,
+                style: const TextStyle(
+                  color: Color(0xFF4C7DFF),
+                  fontWeight: FontWeight.w900,
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(height: 3),
+              const Text(
+                'Estimated',
+                style: TextStyle(
+                  color: Color(0xFF5E6A7F),
+                  fontSize: 9,
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -321,96 +836,43 @@ class FeatureTile extends StatelessWidget {
   }
 }
 
-class BuilderPage extends StatelessWidget {
-  final bool isArabic;
+// ============================================================
+// GAMES SCREEN
+// ============================================================
 
-  const BuilderPage({
-    super.key,
-    required this.isArabic,
-  });
+class GamesScreen extends StatelessWidget {
+  const GamesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final components = isArabic
-        ? [
-            ('CPU', 'المعالج', Icons.memory_rounded),
-            ('GPU', 'كرت الشاشة', Icons.videogame_asset_rounded),
-            ('RAM', 'الرام', Icons.developer_board_rounded),
-            ('SSD', 'التخزين', Icons.storage_rounded),
-            ('PSU', 'مزود الطاقة', Icons.bolt_rounded),
-            ('Case', 'الكيس', Icons.computer_rounded),
-          ]
-        : [
-            ('CPU', 'Processor', Icons.memory_rounded),
-            ('GPU', 'Graphics Card', Icons.videogame_asset_rounded),
-            ('RAM', 'Memory', Icons.developer_board_rounded),
-            ('SSD', 'Storage', Icons.storage_rounded),
-            ('PSU', 'Power Supply', Icons.bolt_rounded),
-            ('Case', 'PC Case', Icons.computer_rounded),
-          ];
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          isArabic ? 'بناء تجميعتك' : 'Build Your PC',
+    return const Center(
+      child: Text(
+        'Games',
+        style: TextStyle(
+          fontSize: 30,
+          fontWeight: FontWeight.bold,
         ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: [
-          Text(
-            isArabic
-                ? 'اختار مكونات جهازك'
-                : 'Choose your components',
-            style: const TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            isArabic
-                ? 'هذه قائمة البداية. راح نضيف القطع والأسعار الحقيقية بالخطوة الجاية.'
-                : 'This is the starting list. Real components and prices come next.',
-            style: const TextStyle(
-              color: Color(0xFF9CA8C0),
-              height: 1.5,
-            ),
-          ),
-          const SizedBox(height: 22),
-          for (final item in components)
-            Card(
-              color: const Color(0xFF131A2A),
-              child: ListTile(
-                leading: Icon(
-                  item.$3,
-                  color: const Color(0xFF91A0FF),
-                  size: 29,
-                ),
-                title: Text(
-                  item.$1,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: Text(item.$2),
-                trailing: const Icon(
-                  Icons.add_circle_outline,
-                ),
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        isArabic
-                            ? 'راح نضيف اختيار القطع الحقيقية بالخطوة الجاية!'
-                            : 'Real component selection comes next!',
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-        ],
+    );
+  }
+}
+
+// ============================================================
+// SECURITY SCREEN
+// ============================================================
+
+class SecurityScreen extends StatelessWidget {
+  const SecurityScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text(
+        'Security',
+        style: TextStyle(
+          fontSize: 30,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
