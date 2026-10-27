@@ -243,8 +243,7 @@ class _CatalogPageState extends State<CatalogPage> {
   String selectedCategory = '';
   String query = '';
   final searchController = TextEditingController();
-  final Map<String, Product> build = {};
-
+  final Map<String, Product> selectedParts = {};
   String money(int value) {
     final text = value.toString();
     final out = StringBuffer();
