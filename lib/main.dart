@@ -15,9 +15,9 @@ class PCBuilderApp extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.dark,
         scaffoldBackgroundColor: const Color(0xFF121212),
-        colorScheme: ColorScheme.dark(
-          primary: const Color(0xFF00E676),
-          secondary: const Color(0xFF7C4DFF),
+        colorScheme: const ColorScheme.dark(
+          primary: Color(0xFF00E676),
+          secondary: Color(0xFF7C4DFF),
         ),
       ),
       home: const AllPartsScreen(),
@@ -28,14 +28,13 @@ class PCBuilderApp extends StatelessWidget {
 class AllPartsScreen extends StatelessWidget {
   const AllPartsScreen({super.key});
 
-  // قائمة القطع مع صور حقيقية ومخصصة لكل قطعة
+  // تم تصحيح نوع البيانات هنا بدقة لتفادي خطأ البناء
   final List> pcParts = const [
     {
       'category': 'معالج (CPU)',
       'name': 'Intel Core i7-14700K',
       'priceIQD': 540000,
       'priceUSD': 329,
-      // صورة حقيقية لمعالج إنتل
       'image': 'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=500',
     },
     {
@@ -43,7 +42,6 @@ class AllPartsScreen extends StatelessWidget {
       'name': 'ASUS ROG Strix Z790-E',
       'priceIQD': 490000,
       'priceUSD': 299,
-      // صورة حقيقية لمبذربورد جيمنج
       'image': 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=500',
     },
     {
@@ -51,7 +49,6 @@ class AllPartsScreen extends StatelessWidget {
       'name': 'NZXT H9 Flow RGB',
       'priceIQD': 260000,
       'priceUSD': 159,
-      // صورة حقيقية لكيس فخم
       'image': 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=500',
     },
   ];
@@ -76,15 +73,13 @@ class AllPartsScreen extends StatelessWidget {
               padding: const EdgeInsets.all(12),
               child: Row(
                 children: [
-                  // صورة القطعة الحقيقية مع حدود دائرية
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.network(
-                      part['image'],
+                      part['image'] as String, // تم تحديد النوع كـ String بدقة
                       width: 90,
                       height: 90,
                       fit: BoxFit.cover,
-                      // حماية ضد مشاكل الإنترنت أو بطئ التحميل
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress == null) return child;
                         return const SizedBox(
@@ -97,18 +92,17 @@ class AllPartsScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 16),
-                  // التفاصيل والأسعار
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          part['category'],
+                          part['category'] as String,
                           style: const TextStyle(color: Color(0xFFB388FF), fontSize: 12, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          part['name'],
+                          part['name'] as String,
                           style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 8),
